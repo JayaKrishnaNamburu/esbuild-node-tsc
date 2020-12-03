@@ -6,14 +6,19 @@ import cpy from "cpy";
 import path from "path";
 import rimraf from "rimraf";
 import { Config, readUserConfig } from "./config";
+import { program } from "commander";
 
 const cwd = process.cwd();
 
 function getTSConfig() {
+  program
+    .option("-p, --project <project>", "custom path for tsconfig")
+    .parse(process.argv);
+
   const tsConfigFile = ts.findConfigFile(
     cwd,
     ts.sys.fileExists,
-    "tsconfig.json"
+    program.project || "tsconfig.json"
   );
   if (!tsConfigFile) {
     throw new Error(`tsconfig.json not found in the current directory! ${cwd}`);
